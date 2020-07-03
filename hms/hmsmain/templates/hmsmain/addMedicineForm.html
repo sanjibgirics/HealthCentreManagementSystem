@@ -1,0 +1,87 @@
+{% extends 'hmsmain/basic.html' %}
+
+{% block title%} Title of Login{% endblock %}
+{% block body %}
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js">
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+     <script>
+        $(document).ready(function(){
+            var i = 1;
+            $('#add').click(function(){
+                i++;
+                $('#dynamic_field').append('<tr id="row'+i+'"><td><div class="field-wrap"><label>Medicine Name<span class="req">*</span></label><input type="text" required name="mname[]"/></div><div class="field-wrap"><label>Additional Info<span class="req">*</span></label><input type="text" name="minfo[]"/></div><div class="field-wrap"><label>Quantity<span class="req">*</span></label><input type=" number"required name="mqty[]"/></div><div class="field-wrap"><label><span class="req">Price Per Unit</span></label><input type="number"required name="mprice[]"/></div></td></td><td><button name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
+            });
+
+            $(document).on('click','.btn_remove', function(){
+                var button_id = $(this).attr("id");
+                $("#row"+button_id+"").remove();
+            });
+            var url1 = "{% url 'hmsmain:addMedicineHandle' %}";
+             $('#submit').click(function(){
+                $.ajax({
+                    async: true,
+                    url: url1,
+                    method: "POST",
+                    data: $('#medicine_details').serialize(),
+                    success:function(rt)
+                    {
+                        alert(rt);
+                        $('#medicine_details')[0].reset();
+                    }
+                });
+            });
+        });
+    </script>
+
+
+  <body>
+
+<div class="crcform">
+        <h1>Add Medicine</h1>
+        <form id="medicine_details">
+            <table class="table table-bordered" id="dynamic_field">
+                <tr>
+                    <td>
+                        <!--div class="top-row"-->
+                        <div class="field-wrap">
+                            <label>
+                                Medicine Name<span class="req">*</span>
+                            </label>
+                            <input type="text" required name="mname[]"/>
+                        </div>
+
+                        <div class="field-wrap">
+                            <label>
+                                Additional Info<span class="req">*</span>
+                            </label>
+                            <input type="text" name="minfo[]"/>
+                        </div>
+
+                        <div class="field-wrap">
+                            <label>
+                                Quantity<span class="req">*</span>
+                            </label>
+                            <input type=" number"required name="mqty[]"/>
+                        </div>
+
+                        <div class="field-wrap">
+                            <label>
+                                <span class="req">Price Per Unit</span>
+                            </label>
+                            <input type="number"required name="mprice[]"/>
+                        </div>
+                    </td>
+                    <td><button type="button" name="add" id="add" class="btn btn-success">Add More</button></td>
+                </tr>
+            </table>
+            {%  csrf_token %}
+            <input type="button" name="submit" id="submit"  class="btn btn-info" value="Submit" />
+        </form>
+    </div>
+<body>
+
+
+{% endblock %}
+
+</html>
