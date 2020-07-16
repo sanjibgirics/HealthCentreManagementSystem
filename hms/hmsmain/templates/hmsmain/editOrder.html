@@ -1,0 +1,58 @@
+{% extends 'hmsmain/basic.html' %}
+
+{% block title%} Title of Order{% endblock %}
+{% block body %}
+
+<div class="container" style="background-color: #e3f2fd;
+    color:black;background: transparent;opacity: 5;font-weight:bold;background: rgba(80, 80, 80, 0.9);margin: 80px 5px 5px 20px;">
+<br>
+    <h1 style="color: oldlace">&nbsp;Edit this order</h1>
+<br>
+        <table class="table" >
+<th>
+                <td style="color: lightblue">Order ID::</td>
+                <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ m.pk }}</td>
+                <td style="color: lightblue">Raised Date::</td>
+                <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ m.lastAcess }}</td>
+                <td style="color: lightblue">Status::</td>
+                <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ m.status }}</td>
+                <td style="color: lightblue">Last Comment::</td>
+                <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ m.lastComment }}</td>
+                </th>
+        </table>
+<table class="table">
+        <tr>
+        {% for o in orderdetaill %}
+
+    {%  if m == o.ooid %}
+                <td style="color: lightgray">Medicine Name:</td>
+                <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ o.omid }}</td>
+                <td style="color: lightgray">Quantity: </td>
+                <td style="color: black">&nbsp;&nbsp;&nbsp;{{ o.omqty }}</td>
+                <td style="color: lightgray">Price Per Unit </td>
+                <td style="color: black">&nbsp;&nbsp;&nbsp;{{ o.omid.mprice }}</td>
+
+</tr>
+        <tr>
+        <td style="border: #666666">
+         <form action="/hmsmain/editOrder/" method="post">
+      <input type="hidden" name="oid" value="{{ m.pk }}" />
+             <input type="hidden" name="omid" value="{{ o.omid.pk }}" />
+     Enter New Quantity<input type="number" name="nqty"/>
+                    <input type="submit" class="btn btn-info" value="Update" />
+     {%  csrf_token %}
+                </form>
+        </td>
+        </tr>
+{%  endif %}
+
+            {%  endfor %}
+         </table>
+<hr style="border: 1px groove white;" />
+
+
+
+</div>
+{% endblock %}
+
+</html>

@@ -19,6 +19,8 @@
                 <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ m.status }}</td>
                 <td style="color: lightblue">Last Comment::</td>
                 <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ m.lastComment }}</td>
+                <td style="color: lightblue">Total::</td>
+                <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ m.total }}</td>
                 </th>
         </table>
         <table class="table">
@@ -47,6 +49,7 @@
         <hr style="border: 1px groove white;" />
            <form action="/hmsmain/forwardOrder/" method="post">
 <input type="hidden" name="oid" value="{{ m.pk }}" />
+            Comment<input type="text" name="comment"/>
                {% if utype == '5' %}
                     <input type="submit" class="btn btn-info" value="Approve" />
                {%  else %}
@@ -54,13 +57,20 @@
                {%  endif %}
        {%  csrf_token %}
                 </form>
-{% if utype != '1' %}
+<br>
  <form action="/hmsmain/revertOrder/" method="post">
       <input type="hidden" name="oid" value="{{ m.pk }}" />
      Comment<input type="text" name="comment"/>
-                    <input type="submit" class="btn btn-info" value="Revert" />
+                     {% if utype == '1' %}
+                    <input type="submit" class="btn btn-info" value="Delete" />
+               {%  else %}
+                     <input type="submit" class="btn btn-info" value="Revert" />
+               {%  endif %}
      {%  csrf_token %}
                 </form>
+    {% if utype == '1' %}
+        <br>
+ <a class="btn btn-info" href="/hmsmain/editOrderPage/?oid={{ m.pk }}">Edit Order</a>
         {% endif %}
 
         <br>

@@ -11,17 +11,14 @@ def index(request):
     return render(request,'hmsmain/index.html')
 
 def about(request):
-    return HttpResponse("kjnii")
-    #return render(request,'hmsmain/index.html')
+    return render(request,'hmsmain/about.html')
 
 def facilities(request):
-    return HttpResponse("kjnii")
-    #return render(request,'hmsmain/index.html')
+    return render(request,'hmsmain/facilities.html')
 
 
 def people(request):
-    return HttpResponse("kjnii")
-    #return render(request,'hmsmain/index.html')
+    return render(request, 'hmsmain/people.html')
 
 def login1(request):
     #return HttpResponse("kjnii")
@@ -88,10 +85,14 @@ def raiseOrderHandle(req):
         order.save()
         omidl = req.POST.getlist('omid[]')
         omqty = req.POST.getlist('omqty[]')
+        total = 0
         for i in range(len(omidl)):
             omid = Medicine.objects.get(pk=omidl[i])
+            total += int(omid.mprice) * int(omqty[i])
             om = orderDetail(ooid=order,omid = omid,omqty = omqty[i])
             om.save()
+        order.total = total;
+        order.save()
         return HttpResponse('Order Added')
     else:
             return HttpResponse('<h2> Unable to dat</h2>')
@@ -109,19 +110,26 @@ def viewPendingOrders(request):
                                                               'medicinel':medicinel,'utype':utype})
 def forwardOrder(request):
     order1 = request.POST.get('oid')
-    print(order1)
-    order1 = Order.objects.get(pk=order1)
-    status = order1.status
-    order1.status = status+1;
-    order1.save()
-    return render(request,'hmsmain/index.html')
-def revertOrder(request):
-    order1 = request.POST.get('oid')
     comment = request.POST.get('comment')
     print(order1)
     order1 = Order.objects.get(pk=order1)
     status = order1.status
-    order1.status = status - 1;
+    order1.status = status+1;
+    order1.lastComment = comment;
+    order1.save()
+    return render(request,'hmsmain/index.html')
+def revertOrder(request):
+    user1 = request.user
+    user = MyUser.objects.get(user=user1)
+    utype = user.utype
+    order1 = request.POST.get('oid')
+    comment = request.POST.get('comment')
+    print(order1)
+    order1 = Order.objects.get(pk=order1)
+    if utype != 1:
+        order1.status = 1;
+    else:
+        order1.status = 0;
     order1.lastComment = comment;
     order1.save()
     return render(request, 'hmsmain/index.html')
@@ -131,7 +139,6 @@ def userHome(request):
     user1 = request.user
     user = MyUser.objects.get(user=user1)
     utype = str(user.utype)
-    print(utype)
     return render(request, 'hmsmain/userHome.html',{'utype':utype})
 
 def viewOrders(request):
@@ -173,3 +180,33 @@ def viewConsumption(request):
     medicinel = Medicine.objects.all()
     return render(request, 'hmsmain/viewConsumption.html', {'consumptionl': consumptionl,'consumptiondetaill':consumptiondetaill,
                                                               'medicinel':medicinel})
+
+def editOrderPage(request):
+    order1 = request.GET.get('oid')
+    orderl = Order.objects.get(pk = order1)
+    orderdetaill = orderDetail.objects.all()
+    medicinel = Medicine.objects.all()
+    return render(request, 'hmsmain/editOrder.html', {'m': orderl, 'orderdetaill': orderdetaill,
+                                                       'medicinel': medicinel})
+
+def editOrder(request):
+    order1 = request.POST.get('oid')
+    omid = request.POST.get('omid')
+    nqty = request.POST.get('nqty')
+    print(order1)
+    print(omid)
+    print(nqty)
+    try:
+        medicine1 = orderDetail.objects.get(ooid=order1,omid=omid)
+    except orderDetail.DoesNotExist:
+        return HttpResponse('<h2>No Record</h2>')
+    print(medicine1)
+    if int(nqty) != 0:
+        medicine1.ooid.total = (medicine1.ooid.total -  (int(medicine1.omid.mprice) * int(medicine1.omqty))
+        ) + (int(medicine1.omid.mprice) * int(nqty))
+        medicine1.omqty = nqty
+        medicine1.ooid.save()
+        medicine1.save()
+    else:
+        medicine1.delete()
+    return render(request, 'hmsmain/index.html')

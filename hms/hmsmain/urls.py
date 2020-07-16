@@ -39,4 +39,6 @@ urlpatterns = [
     path('issueMedicine/', views.issueMedicine, name='issueMedicine'),
     path('issueMedicineHandle/', views.issueMedicineHandle, name='issueMedicineHandle'),
     path('viewConsumption/',views.viewConsumption,name='viewConsumption'),
+    path('editOrderPage/', views.editOrderPage, name='editOrderPage'),
+    path('editOrder/', views.editOrder, name='editOrder'),
 ]

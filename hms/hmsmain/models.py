@@ -22,6 +22,7 @@ class Order(models.Model):
     status = models.IntegerField(default=2,null=True)
     lastComment = models.CharField(max_length=100,null=True)
     lastAcess = models.DateTimeField(default=datetime.now, blank=True)
+    total = models.IntegerField(default=0,null=True)
 
 class orderDetail(models.Model):
     ooid = models.ForeignKey(
