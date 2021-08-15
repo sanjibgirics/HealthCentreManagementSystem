@@ -1,0 +1,85 @@
+{% extends 'hmsmain/basic.html' %}
+
+{% block title%} Title of Order{% endblock %}
+{% block body %}
+
+<div class="container" style="background-color: #e3f2fd;
+    color:black;background: transparent;opacity: 5;font-weight:bold;background: rgba(80, 80, 80, 0.9);margin: 80px 5px 5px 20px;">
+<br>
+    <h1 style="color: oldlace">&nbsp;Pending Orders</h1>
+<br>
+    {% for m in orderl %}
+        <table class="table">
+<th>
+                <td style="color: lightblue">Order ID::</td>
+                <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ m.pk }}</td>
+                <td style="color: lightblue">Raised Date::</td>
+                <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ m.lastAcess }}</td>
+                <td style="color: lightblue">Status::</td>
+                <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ m.status }}</td>
+                <td style="color: lightblue">Last Comment::</td>
+                <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ m.lastComment }}</td>
+                <td style="color: lightblue">Total::</td>
+                <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ m.total }}</td>
+                </th>
+        </table>
+        <table class="table">
+        <tr>
+        {% for o in orderdetaill %}
+
+    {%  if m == o.ooid %}
+                <td style="color: lightgray">Medicine Name:</td>
+                <td style="color: black;">&nbsp;&nbsp;&nbsp;{{ o.omid }}</td>
+                <td style="color: lightgray">Quantity:</td>
+                <td style="color: black">&nbsp;&nbsp;&nbsp;{{ o.omqty }}</td>
+                <td style="color: lightgray">Price Per Unit</td>
+                <td style="color: black">&nbsp;&nbsp;&nbsp;{{ o.omid.mprice }}</td>
+
+
+</tr>
+{%  endif %}
+            {%  endfor %}
+
+
+<tr>
+
+</tr>
+
+         </table>
+        <hr style="border: 1px groove white;" />
+           <form action="/hmsmain/forwardOrder/" method="post">
+<input type="hidden" name="oid" value="{{ m.pk }}" />
+            Comment<input type="text" name="comment"/>
+               {% if utype == '5' %}
+                    <input type="submit" class="btn btn-info" value="Approve" />
+               {%  else %}
+                     <input type="submit" class="btn btn-info" value="Forward" />
+               {%  endif %}
+       {%  csrf_token %}
+                </form>
+<br>
+ <form action="/hmsmain/revertOrder/" method="post">
+      <input type="hidden" name="oid" value="{{ m.pk }}" />
+     Comment<input type="text" name="comment"/>
+                     {% if utype == '1' %}
+                    <input type="submit" class="btn btn-info" value="Delete" />
+               {%  else %}
+                     <input type="submit" class="btn btn-info" value="Revert" />
+               {%  endif %}
+     {%  csrf_token %}
+                </form>
+    {% if utype == '1' %}
+        <br>
+ <a class="btn btn-info" href="/hmsmain/editOrderPage/?oid={{ m.pk }}">Edit Order</a>
+        {% endif %}
+
+        <br>
+        <br>
+        <br>
+{%  endfor %}
+
+
+</div>
+{% endblock %}
+
+</html>

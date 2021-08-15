@@ -1,0 +1,79 @@
+{% extends 'hmsmain/basic.html' %}
+
+{% block title%} UserHome{% endblock %}
+{% block body %}
+<br>
+        <br>
+
+    {% if utype == '1' %}
+        <a style="background-color: grey;
+  box-shadow: 0 5px 0 darkgrey;
+  color: white;
+  padding: 1em 1.5em;
+  text-decoration: none;
+  text-transform: uppercase;" href="/hmsmain/addMedicine">Add Medicine</a>
+        <br>
+        <br>
+        <br>
+
+        <a style="background-color: grey;
+  box-shadow: 0 5px 0 darkgrey;
+  color: white;
+  padding: 1em 1.5em;
+  text-decoration: none;
+  text-transform: uppercase;" href="/hmsmain/issueMedicine">Issue Medicine</a>
+        <br>
+        <br>
+        <br>
+
+
+        <a style="background-color: grey;
+  box-shadow: 0 5px 0 darkgrey;
+  color: white;
+  padding: 1em 1.5em;
+  text-decoration: none;
+  text-transform: uppercase;" href="/hmsmain/raiseOrder">Raise New Medicine Order</a>
+    {% endif %}
+    <br>
+    <br>
+    <br>
+     <a style="background-color: grey;
+  box-shadow: 0 5px 0 darkgrey;
+  color: white;
+  padding: 1em 1.5em;
+  text-decoration: none;
+  text-transform: uppercase;" href="/hmsmain/viewMedicine">View Medicine Stocks</a>
+
+     <br>
+    <br>
+    <br>
+    <a style="background-color: grey;
+  box-shadow: 0 5px 0 darkgrey;
+  color: white;
+  padding: 1em 1.5em;
+  text-decoration: none;
+  text-transform: uppercase;" href="/hmsmain/viewPendingOrders?utype={{ utype }}">View Pending Orders</a>
+
+    <br>
+    <br>
+    <br>
+
+    <a style="background-color: grey;
+  box-shadow: 0 5px 0 darkgrey;
+  color: white;
+  padding: 1em 1.5em;
+  text-decoration: none;
+  text-transform: uppercase;" href="/hmsmain/viewOrders">View All Orders</a>
+
+    <br>
+    <br>
+    <br>
+
+    <a style="background-color: grey;
+  box-shadow: 0 5px 0 darkgrey;
+  color: white;
+  padding: 1em 1.5em;
+  text-decoration: none;
+  text-transform: uppercase;" href="/hmsmain/viewConsumption">View Medicine Consumption</a>
+
+{% endblock %}

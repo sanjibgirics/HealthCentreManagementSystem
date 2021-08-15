@@ -1,0 +1,107 @@
+{% extends 'hmsmain/basic.html' %}
+
+{% block title%} Title of Order{% endblock %}
+{% block body %}
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js">
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+     <script>
+     function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+        $(document).ready(function(){
+            var i = 1;
+            $('#add').click(function(){
+                i++;
+                $('#dynamic_field').append('<tr id="row'+i+'"><td> <div class="field-wrap">\n' +
+                    '                     <label>\n' +
+                    '                                Medicine Name<span class="req">*</span>\n' +
+                    '                            </label>\n' +
+                    '                   <select name="omid[]">\n' +
+                    '                        <option >------------</option>+{% for m in mnames %}\n'+
+                        '                        <option value="{{ m.pk }}">{{ m.mname }}</option>\n'+
+                        '                        {% endfor %}\n' +
+                    '                    </select>\n' +
+                    '                </div><div class="field-wrap"><label>Quantity<span class="req">*</span></label><input type=" number"required name="omqty[]"/></div></td></td><td><button name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
+            });
+
+            $(document).on('click','.btn_remove', function(){
+                var button_id = $(this).attr("id");
+                $("#row"+button_id+"").remove();
+            });
+            var url1 = "{% url 'hmsmain:raiseOrderHandle' %}";
+             $('#submit').click(function(){
+                $.ajax({
+
+                    async: true,
+                    url: url1,
+                    method: "POST",
+                    data: $('#order_details').serialize(),
+                    success:function(rt)
+                    {
+                        alert(rt);
+                        $('#order_details')[0].reset();
+                    }
+                });
+            });
+        });
+    </script>
+
+
+  <body>
+
+<div class="crcform">
+        <h1>Raise Order</h1>
+        <form id="order_details">
+            <table class="table table-bordered" id="dynamic_field">
+                <tr>
+                    <td>
+
+
+                    <div class="field-wrap">
+                     <label>
+                                Medicine Name<span class="req">*</span>
+                            </label>
+                   <select name="omid[]">
+                        <option >------------</option>
+                        {% for m in mnames %}
+                        <option value="{{ m.pk }}">{{ m.mname }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                        <div class="field-wrap">
+                            <label>
+                                Quantity<span class="req">*</span>
+                            </label>
+                            <input type=" number"required name="omqty[]"/>
+                        </div>
+
+
+                    </td>
+                    <td><button type="button" name="add" id="add" class="btn btn-success">Add More</button></td>
+                </tr>
+            </table>
+
+            <input type="button" name="submit" id="submit"  class="btn btn-info" value="Submit" />
+            {% csrf_token %}
+        </form>
+    </div>
+<body>
+
+
+{% endblock %}
+
+</html>
